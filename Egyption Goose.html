@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Meet the Egyptian Goose</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #222;
+      text-align: center;
+      background-image: url('Egyption Goose_bg.png');
+      background-size: 300px;
+      background-repeat: repeat;
+      background-attachment: fixed;
+    }
+
+    .content-wrapper {
+      background: white;
+      border-radius: 16px;
+      max-width: 1100px;
+      margin: 2em auto;
+      padding: 2em 1em;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2, p {
+      margin: 0.5em auto;
+      padding: 0;
+      max-width: 90%;
+    }
+
+    button {
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      padding: 0.75em 2em;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 1em;
+    }
+
+    video {
+      width: 90%;
+      max-width: 800px;
+      display: block;
+      margin: 1em auto;
+    }
+
+    #map {
+      height: 550px;
+      width: 90%;
+      max-width: 1000px;
+      margin: 1em auto;
+    }
+
+    .slider-container {
+      margin: 1em auto;
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    #instructionText {
+      font-size: 1rem;
+      margin-bottom: 1em;
+      color: #555;
+    }
+
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      p {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="content-wrapper">
+  <h1>Welcome to the Egyptian Goose Explorer</h1>
+  <p>Click below to watch an introduction video, then explore the goose's migration journey!</p>
+
+  <div id="startButtonContainer">
+    <button onclick="startVideo()">▶ Watch Video</button>
+  </div>
+
+  <div id="videoContainer" style="display:none">
+    <video id="gooseVideo" controls>
+      <source src="introduction_Egyption Goose.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <div id="intro" style="display:none">
+    <p>Thanks for watching! Click below to explore the Egyptian Goose's migration path.</p>
+    <button onclick="startMap()">🧭 Explore Migration</button>
+  </div>
+
+  <div id="mapContainer" style="display:none">
+    <h2>Egyptian Goose Migration Map</h2>
+    <p id="instructionText">Use the slider below to explore different migration locations.</p>
+    <div id="map"></div>
+    <div class="slider-container">
+      <label for="timeRange">Migration Location:</label><br>
+      <input type="range" id="timeRange" min="0" max="19" step="1" value="0">
+      <span id="timeLabel">Location-1</span>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script>
+function startVideo() {
+  document.getElementById('startButtonContainer').style.display = 'none';
+  document.getElementById('videoContainer').style.display = 'block';
+  const video = document.getElementById('gooseVideo');
+  video.play();
+  video.onended = () => {
+    document.getElementById('intro').style.display = 'block';
+  };
+}
+
+function startMap() {
+  document.getElementById('videoContainer').style.display = 'none';
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('mapContainer').style.display = 'block';
+  initMap();
+}
+
+function initMap() {
+  const migrationData = [
+  { coords: [30.0444, 31.2357], time: 0, name: "Location-1", desc: "Primary wintering habitat with warm temperatures and abundant resources." },
+  { coords: [15.5007, 32.5599], time: 1, name: "Location-2", desc: "Important resting and feeding area during early spring migration." },
+  { coords: [9.145, 40.4897], time: 2, name: "Location-3", desc: "Breeding area during summer months, offering elevation and cooler weather." },
+  { coords: [0.3476, 32.5825], time: 3, name: "Location-4", desc: "A key lake region stopover for hydration and feeding during migration." },
+  { coords: [-1.2921, 36.8219], time: 4, name: "Location-5", desc: "Moulting site in local wetlands, safe from predators during feather regrowth." },
+  { coords: [-15.3875, 28.3228], time: 5, name: "Location-6", desc: "Seasonal migration checkpoint with ample food sources." },
+  { coords: [-26.2041, 28.0473], time: 6, name: "Location-7", desc: "Mild southern African winter refuge with urban adaptation." },
+  { coords: [-33.9249, 18.4241], time: 7, name: "Location-8", desc: "Occasional southern extension during late winter, less commonly visited." },
+  { coords: [41.9028, 12.4964], time: 8, name: "Location-9", desc: "Introduced populations observed in European parks and lakes during warm seasons." },
+  { coords: [51.5074, -0.1278], time: 9, name: "Location-10", desc: "Established feral populations; urban parks are key summer nesting grounds." },
+  { coords: [35.6895, 139.6917], time: 10, name: "Location-11", desc: "Unusual eastward expansion into Asia, often seen in urban water bodies." },
+  { coords: [48.8566, 2.3522], time: 11, name: "Location-12", desc: "Sightings in city parks, often as escaped or introduced populations." },
+  { coords: [52.52, 13.405], time: 12, name: "Location-13", desc: "Cool temperate climate serves as breeding ground for isolated groups." },
+  { coords: [40.7128, -74.006], time: 13, name: "Location-14", desc: "Observed in park wetlands, mainly as introduced species." },
+  { coords: [55.7558, 37.6173], time: 14, name: "Location-15", desc: "Recorded expansion northwards during peak summer heat." },
+  { coords: [39.9042, 116.4074], time: 15, name: "Location-16", desc: "Rare sightings in East Asia during migratory fluctuations." },
+  { coords: [19.4326, -99.1332], time: 16, name: "Location-17", desc: "Sightings linked to introduced individuals in large park lakes." },
+  { coords: [34.0522, -118.2437], time: 17, name: "Location-18", desc: "Occasional observations in city reserves near lakes and rivers." },
+  { coords: [-33.4489, -70.6693], time: 18, name: "Location-19", desc: "Southern limit of observed range; sightings are extremely rare." },
+  { coords: [-23.5505, -46.6333], time: 19, name: "Location-20", desc: "Large urban lakes may support escaped individuals in exotic populations." }
+];
+
+
+
+  const map = L.map('map').setView([15, 20], 2);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  let markers = [];
+  const pathCoords = migrationData.map(p => p.coords);
+
+  const polyline = L.polyline(pathCoords, {
+    color: 'black',
+    weight: 5,
+    opacity: 0.9,
+    dashArray: '10, 6',
+    lineJoin: 'round'
+  }).addTo(map);
+
+  map.fitBounds(polyline.getBounds());
+
+  function updateMap(time) {
+    markers.forEach(marker => map.removeLayer(marker));
+    markers = [];
+
+    const current = migrationData.find(item => item.time == time);
+    if (current) {
+      const marker = L.marker(current.coords)
+        .addTo(map)
+        .bindPopup(`<strong>${current.name}</strong><br>${current.desc}`)
+        .openPopup();
+      markers.push(marker);
+      map.setView(current.coords, 4);
+    }
+
+    document.getElementById("timeLabel").textContent = `${current.name}`;
+  }
+
+  document.getElementById("timeRange").addEventListener("input", (e) => {
+    updateMap(e.target.value);
+  });
+
+  updateMap(0);
+}
+</script>
+
+</body>
+</html>
