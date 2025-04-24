@@ -71,10 +71,11 @@
 
     const foodTypes = Object.entries(assets).slice(1); // remove gull
 
-    let gull = {x: canvas.width/2 - 40, y: canvas.height - 200, width: 80, height: 80}; // 👈 往上调整后的坐标
+    let gull = {x: canvas.width/2 - 40, y: canvas.height - 200, width: 80, height: 80};
     let foods = [];
     let score = 0;
     let gameRunning = false;
+    let targetX = null;
 
     const images = {};
     let loadedImages = 0;
@@ -138,12 +139,24 @@
       });
     }
 
+    function moveGullTowardTarget() {
+      if (targetX !== null) {
+        const dx = targetX - gull.x;
+        if (Math.abs(dx) > 1) {
+          gull.x += dx * 0.1; // 平滑跟随
+          gull.x = Math.max(0, Math.min(gull.x, canvas.width - gull.width));
+        }
+      }
+    }
+
     function gameLoop() {
       if (!gameRunning) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (Math.random() < 0.03) {
         foods.push(getRandomFood());
       }
+
+      moveGullTowardTarget();
       updateFoods();
       checkCollision();
       drawFoods();
@@ -164,18 +177,13 @@
       score = 0;
       scoreText.innerText = '分数: 0';
       gameOverText.style.display = 'none';
+      targetX = null;
       gameRunning = true;
       gameLoop();
     }
 
     window.addEventListener('touchstart', e => {
-      const touchX = e.touches[0].clientX;
-      if (touchX < canvas.width / 2) {
-        gull.x -= 40;
-      } else {
-        gull.x += 40;
-      }
-      gull.x = Math.max(0, Math.min(gull.x, canvas.width - gull.width));
+      targetX = e.touches[0].clientX - gull.width / 2;
     });
 
     startBtn.addEventListener('click', () => {
