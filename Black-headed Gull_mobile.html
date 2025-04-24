@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>黑头鸥吃吃乐</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: sans-serif;
+      background: #b3e0ff;
+    }
+    #gameCanvas {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      background: #b3e0ff;
+    }
+    #startButton, #score, #gameOverText {
+      position: absolute;
+      z-index: 10;
+      font-size: 1.5rem;
+      padding: 10px 20px;
+      background: white;
+      border: none;
+      border-radius: 10px;
+    }
+    #startButton {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #score {
+      top: 10px;
+      right: 10px;
+      font-size: 1.2rem;
+      background: rgba(255, 255, 255, 0.8);
+    }
+    #gameOverText {
+      top: 40%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <button id="startButton">开始游戏</button>
+  <div id="score">分数: 0</div>
+  <div id="gameOverText">游戏结束！</div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('startButton');
+    const scoreText = document.getElementById('score');
+    const gameOverText = document.getElementById('gameOverText');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const assets = {
+      gull: 'Black-headed Gull.png',
+      burger: {src: 'burger.png', score: 4, weight: 1},
+      bread: {src: 'bread.png', score: 3, weight: 2},
+      chips: {src: 'chips.png', score: 2, weight: 3},
+      cookie: {src: 'cookie.png', score: 1, weight: 4},
+    };
+
+    const foodTypes = Object.entries(assets).slice(1); // remove gull
+
+    let gull = {x: canvas.width/2 - 40, y: canvas.height - 100, width: 80, height: 80};
+    let foods = [];
+    let score = 0;
+    let gameRunning = false;
+
+    const images = {};
+    let loadedImages = 0;
+
+    function loadImages(callback) {
+      const total = Object.keys(assets).length;
+      for (const [key, val] of Object.entries(assets)) {
+        const img = new Image();
+        img.src = typeof val === 'string' ? val : val.src;
+        img.onload = () => {
+          images[key] = img;
+          if (++loadedImages === total) callback();
+        };
+      }
+    }
+
+    function getRandomFood() {
+      let pool = [];
+      foodTypes.forEach(([name, data]) => {
+        pool.push(...Array(data.weight).fill(name));
+      });
+      const type = pool[Math.floor(Math.random() * pool.length)];
+      const food = {
+        type,
+        x: Math.random() * (canvas.width - 60),
+        y: canvas.height,
+        width: 60,
+        height: 60,
+        speed: 2
+      };
+      return food;
+    }
+
+    function drawGull() {
+      ctx.drawImage(images.gull, gull.x, gull.y, gull.width, gull.height);
+    }
+
+    function drawFoods() {
+      foods.forEach(food => {
+        ctx.drawImage(images[food.type], food.x, food.y, food.width, food.height);
+      });
+    }
+
+    function updateFoods() {
+      foods.forEach(f => f.y -= f.speed);
+      foods = foods.filter(f => f.y + f.height > 0);
+    }
+
+    function checkCollision() {
+      foods.forEach((f, i) => {
+        if (
+          gull.x < f.x + f.width &&
+          gull.x + gull.width > f.x &&
+          gull.y < f.y + f.height &&
+          gull.y + gull.height > f.y
+        ) {
+          score += assets[f.type].score;
+          scoreText.innerText = `分数: ${score}`;
+          foods.splice(i, 1);
+        }
+      });
+    }
+
+    function gameLoop() {
+      if (!gameRunning) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (Math.random() < 0.03) {
+        foods.push(getRandomFood());
+      }
+      updateFoods();
+      checkCollision();
+      drawFoods();
+      drawGull();
+
+      if (score >= 50) {
+        gameRunning = false;
+        gameOverText.style.display = 'block';
+        return;
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    function startGame() {
+      gull.x = canvas.width/2 - gull.width/2;
+      foods = [];
+      score = 0;
+      scoreText.innerText = '分数: 0';
+      gameOverText.style.display = 'none';
+      gameRunning = true;
+      gameLoop();
+    }
+
+    window.addEventListener('touchstart', e => {
+      const touchX = e.touches[0].clientX;
+      if (touchX < canvas.width / 2) {
+        gull.x -= 40;
+      } else {
+        gull.x += 40;
+      }
+      gull.x = Math.max(0, Math.min(gull.x, canvas.width - gull.width));
+    });
+
+    startBtn.addEventListener('click', () => {
+      startBtn.style.display = 'none';
+      startGame();
+    });
+
+    loadImages(() => {
+      ctx.fillStyle = '#333';
+      ctx.fillText('图片加载完成，点击开始按钮进入游戏！', 20, 30);
+    });
+  </script>
+</body>
+</html>
