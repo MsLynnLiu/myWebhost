@@ -2,199 +2,248 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Canada Goose Discovered</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black-headed Gull Snack Game</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Open+Sans&display=swap');
-
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Open Sans', sans-serif;
-      background: url('https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/CGbackground.png') repeat;
-      background-size: contain;
-      background-attachment: fixed;
-      color: #2d2d2d;
+      overflow: hidden;
+      font-family: sans-serif;
+      background: #b3e0ff;
     }
-
-    .hero, .content {
-      transition: opacity 0.5s ease;
+    #gameCanvas {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      background: #b3e0ff;
     }
-
-    .hero {
-      min-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 0 20px;
-    }
-
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      color: #000;
-    }
-
-    .hero p {
-      font-size: 1.1rem;
-      color: #111;
-    }
-
-    .content {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      max-width: 1100px;
-      margin: 60px auto;
-      padding: 0 20px;
-    }
-
-    .text-box {
-      max-width: 700px;
-      text-align: center;
-      background-color: rgba(255, 255, 255, 0.85);
-      padding: 30px;
+    button, #score {
+      position: absolute;
+      z-index: 10;
+      font-size: 1.5rem;
+      padding: 10px 20px;
+      background: black;
+      color: white;
+      border: none;
       border-radius: 12px;
     }
-
-    .text-box h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 28px;
-      margin-bottom: 20px;
+    #startButton {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
-
-    .text-box p {
-      font-size: 16px;
-      line-height: 1.7;
-      margin-bottom: 30px;
+    #score {
+      top: 10px;
+      right: 10px;
+      font-size: 1.2rem;
     }
-
-    .text-box button,
-    .complete-btn {
-      background-color: #000;
-      color: white;
+    #gameOverText {
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      color: black;
       padding: 12px 24px;
       border-radius: 12px;
-      font-weight: bold;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-    }
-
-    .text-box button:hover,
-    .complete-btn:hover {
-      background-color: #333;
-    }
-
-    .iframe-wrapper {
+      font-size: 1.5rem;
+      z-index: 10;
       display: none;
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 40px 20px;
+    }
+    #findMoreBtn {
+      display: none;
+      top: 48%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    #finalMessage {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       background: white;
-      border-radius: 12px;
+      color: black;
+      font-size: 1.6rem;
+      font-family: sans-serif;
+      padding: 2rem;
+      box-sizing: border-box;
+      z-index: 100;
       text-align: center;
-    }
-
-    iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
-      border-radius: 8px;
-    }
-
-    .hidden {
-      display: none !important;
-      opacity: 0;
-    }
-
-    .congrats-section {
-      display: none;
-      max-width: 900px;
-      margin: 60px auto;
-      background-color: rgba(255, 255, 255, 0.9);
-      border-radius: 20px;
-      padding: 40px 20px;
-      text-align: center;
-    }
-
-    .congrats-section img {
-      max-width: 100%;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
-
-    .congrats-section h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 24px;
-      color: #000;
-      margin-top: 0;
-    }
-
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 1.8rem;
-      }
-      .hero p {
-        font-size: 1rem;
-      }
-      .text-box h2 {
-        font-size: 24px;
-      }
-      .text-box p {
-        font-size: 15px;
-      }
+      line-height: 2.4rem;
     }
   </style>
 </head>
 <body>
-  <div class="hero" id="hero">
-    <h1>Congratulations! You’ve Spotted a Canada Goose</h1>
-    <p>Now complete the puzzle to unlock your clue!</p>
+  <canvas id="gameCanvas"></canvas>
+  <button id="startButton">Start Game</button>
+  <div id="score">Score: 0</div>
+  <div id="gameOverText">Game Over!</div>
+  <button id="findMoreBtn">Find More</button>
+  <div id="finalMessage">
+    <p><strong>🎉 Congratulations! You’ve found the clue of the Black-headed Gull!</strong></p>
+    <p>Now that you've collected all the clues,<br>please take time to investigate them!</p>
   </div>
 
-  <div class="content" id="content">
-    <div class="text-box">
-      <h2>Track the Trail</h2>
-      <p>
-        This is just the beginning. Every piece you solve brings you closer to discovering the full story.
-        Can you piece together the clues and follow where the geese have flown?
-      </p>
-      <button onclick="revealPuzzle(); playGooseCall();">Start the Puzzle</button>
-    </div>
-  </div>
-
-  <div class="iframe-wrapper" id="puzzleBox">
-    <iframe id="puzzleFrame" src="https://www.jigsawplanet.com/?rc=play&amp;pid=0c1cdb8b4ee0&amp;view=iframe" allowfullscreen></iframe>
-    <br>
-    <button class="complete-btn" onclick="showFinalMessage();">I’ve completed the puzzle</button>
-  </div>
-
-  <div class="congrats-section" id="congratsSection">
-    <img src="https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/canadaGoose.png" alt="Completed Puzzle">
-    <h2>🎉 Congratulations! You’ve uncovered the clue for the Canada Goose. Time to find the next one!</h2>
-  </div>
-
-  <audio id="gooseSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
+  <audio id="bgMusic" loop>
+    <source src="https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/Black-headed Gull_Game_bgmusic.mp3" type="audio/mp3">
+  </audio>
 
   <script>
-    function playGooseCall() {
-      document.getElementById('gooseSound').play();
-    }
-    function revealPuzzle() {
-      document.getElementById('hero').classList.add('hidden');
-      document.getElementById('content').classList.add('hidden');
-      document.getElementById('puzzleBox').style.display = 'block';
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('startButton');
+    const scoreText = document.getElementById('score');
+    const gameOverText = document.getElementById('gameOverText');
+    const findMoreBtn = document.getElementById('findMoreBtn');
+    const finalMessage = document.getElementById('finalMessage');
+    const bgMusic = document.getElementById('bgMusic');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const assets = {
+      gull: 'https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/Black-headed Gull.png',
+      burger: {src: 'https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/burger.png', score: 4, weight: 1},
+      bread: {src: 'https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/bread.png', score: 3, weight: 2},
+      chips: {src: 'https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/chips.png', score: 2, weight: 3},
+      cookie: {src: 'https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/cookie.png', score: 1, weight: 4},
+    };
+
+    const foodTypes = Object.entries(assets).slice(1);
+
+    let gull = {x: canvas.width/2 - 40, y: canvas.height - 200, width: 80, height: 80};
+    let foods = [];
+    let score = 0;
+    let gameRunning = false;
+    let targetX = null;
+
+    const images = {};
+    let loadedImages = 0;
+
+    function loadImages(callback) {
+      const total = Object.keys(assets).length;
+      for (const [key, val] of Object.entries(assets)) {
+        const img = new Image();
+        img.src = typeof val === 'string' ? val : val.src;
+        img.onload = () => {
+          images[key] = img;
+          if (++loadedImages === total) callback();
+        };
+      }
     }
 
-    function showFinalMessage() {
-      document.getElementById('puzzleBox').classList.add('hidden');
-      document.getElementById('congratsSection').style.display = 'block';
+    function getRandomFood() {
+      let pool = [];
+      foodTypes.forEach(([name, data]) => {
+        pool.push(...Array(data.weight).fill(name));
+      });
+      const type = pool[Math.floor(Math.random() * pool.length)];
+      return {
+        type,
+        x: Math.random() * (canvas.width - 60),
+        y: canvas.height,
+        width: 60,
+        height: 60,
+        speed: 2
+      };
     }
+
+    function drawGull() {
+      ctx.drawImage(images.gull, gull.x, gull.y, gull.width, gull.height);
+    }
+
+    function drawFoods() {
+      foods.forEach(food => {
+        ctx.drawImage(images[food.type], food.x, food.y, food.width, food.height);
+      });
+    }
+
+    function updateFoods() {
+      foods.forEach(f => f.y -= f.speed);
+      foods = foods.filter(f => f.y + f.height > 0);
+    }
+
+    function checkCollision() {
+      foods.forEach((f, i) => {
+        if (
+          gull.x < f.x + f.width &&
+          gull.x + gull.width > f.x &&
+          gull.y < f.y + f.height &&
+          gull.y + gull.height > f.y
+        ) {
+          score += assets[f.type].score;
+          scoreText.innerText = `Score: ${score}`;
+          foods.splice(i, 1);
+        }
+      });
+    }
+
+    function moveGullTowardTarget() {
+      if (targetX !== null) {
+        const dx = targetX - gull.x;
+        if (Math.abs(dx) > 1) {
+          gull.x += dx * 0.1;
+          gull.x = Math.max(0, Math.min(gull.x, canvas.width - gull.width));
+        }
+      }
+    }
+
+    function gameLoop() {
+      if (!gameRunning) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (Math.random() < 0.03) foods.push(getRandomFood());
+      moveGullTowardTarget();
+      updateFoods();
+      checkCollision();
+      drawFoods();
+      drawGull();
+
+      if (score >= 50) {
+        gameRunning = false;
+        gameOverText.style.display = 'block';
+        findMoreBtn.style.display = 'block';
+        bgMusic.pause();
+        return;
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    function startGame() {
+      gull.x = canvas.width/2 - gull.width/2;
+      foods = [];
+      score = 0;
+      scoreText.innerText = 'Score: 0';
+      gameOverText.style.display = 'none';
+      findMoreBtn.style.display = 'none';
+      finalMessage.style.display = 'none';
+      targetX = null;
+      gameRunning = true;
+      bgMusic.currentTime = 0;
+      bgMusic.play();
+      gameLoop();
+    }
+
+    window.addEventListener('touchstart', e => {
+      targetX = e.touches[0].clientX - gull.width / 2;
+    });
+
+    startBtn.addEventListener('click', () => {
+      startBtn.style.display = 'none';
+      startGame();
+    });
+
+    findMoreBtn.addEventListener('click', () => {
+      gameOverText.style.display = 'none';
+      finalMessage.style.display = 'block';
+    });
+
+    loadImages(() => {
+      ctx.fillStyle = '#333';
+      ctx.fillText('Images loaded. Tap Start Game to play!', 20, 30);
+    });
   </script>
 </body>
 </html>
