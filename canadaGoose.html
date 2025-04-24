@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Puzzle Completed - Totem Unlocked</title>
+  <title>Canada Goose Discovered</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Open+Sans&display=swap');
 
@@ -16,6 +16,10 @@
       background-size: contain;
       background-attachment: fixed;
       color: #2d2d2d;
+    }
+
+    .hero, .content {
+      transition: opacity 0.5s ease;
     }
 
     .hero {
@@ -38,27 +42,6 @@
     .hero p {
       font-size: 1.1rem;
       color: #111;
-    }
-
-    .feather {
-      position: absolute;
-      top: -50px;
-      width: 40px;
-      height: 40px;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Feather_icon.svg/1024px-Feather_icon.svg.png') no-repeat center center / contain;
-      animation: fall 10s linear infinite;
-      opacity: 0.8;
-    }
-
-    .feather:nth-child(1) { left: 10%; animation-delay: 0s; }
-    .feather:nth-child(2) { left: 30%; animation-delay: 2s; }
-    .feather:nth-child(3) { left: 50%; animation-delay: 4s; }
-    .feather:nth-child(4) { left: 70%; animation-delay: 6s; }
-    .feather:nth-child(5) { left: 90%; animation-delay: 8s; }
-
-    @keyframes fall {
-      0% { top: -50px; transform: rotate(0deg); }
-      100% { top: 100vh; transform: rotate(360deg); }
     }
 
     .content {
@@ -90,20 +73,66 @@
       margin-bottom: 30px;
     }
 
-    .text-box a {
-      display: inline-block;
-      background-color: #2d2d2d;
+    .text-box button,
+    .complete-btn {
+      background-color: #000;
       color: white;
       padding: 12px 24px;
-      border-radius: 6px;
-      text-decoration: none;
+      border-radius: 12px;
       font-weight: bold;
       font-size: 16px;
-      transition: background-color 0.3s ease;
+      border: none;
+      cursor: pointer;
     }
 
-    .text-box a:hover {
-      background-color: #444;
+    .text-box button:hover,
+    .complete-btn:hover {
+      background-color: #333;
+    }
+
+    .iframe-wrapper {
+      display: none;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background: white;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      border-radius: 8px;
+    }
+
+    .hidden {
+      display: none !important;
+      opacity: 0;
+    }
+
+    .congrats-section {
+      display: none;
+      max-width: 900px;
+      margin: 60px auto;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .congrats-section img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .congrats-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: #000;
+      margin-top: 0;
     }
 
     @media (max-width: 768px) {
@@ -123,33 +152,48 @@
   </style>
 </head>
 <body>
-  <div class="hero">
-    <h1>You’ve Unlocked the Totem’s Memory</h1>
-    <p>Each solved fragment whispers an ancient truth.</p>
-    <div class="feather"></div>
-    <div class="feather"></div>
-    <div class="feather"></div>
-    <div class="feather"></div>
-    <div class="feather"></div>
+  <div class="hero" id="hero">
+    <h1>Congratulations! You’ve Spotted a Canada Goose</h1>
+    <p>Now complete the puzzle to unlock your clue!</p>
   </div>
 
-  <div class="content">
+  <div class="content" id="content">
     <div class="text-box">
-      <h2>Echoes of the Totem</h2>
+      <h2>Track the Trail</h2>
       <p>
-        You’ve journeyed through mystery and memory. The puzzle is only part of the path.
-        A greater discovery lies ahead — one that will reveal what the totems have long guarded in silence.
+        This is just the beginning. Every piece you solve brings you closer to discovering the full story.
+        Can you piece together the clues and follow where the geese have flown?
       </p>
-      <a href="https://example.com/next-step" onclick="playGooseCall()">Continue Your Quest</a>
+      <button onclick="revealPuzzle(); playGooseCall();">Start the Puzzle</button>
     </div>
+  </div>
+
+  <div class="iframe-wrapper" id="puzzleBox">
+    <iframe id="puzzleFrame" src="https://www.jigsawplanet.com/?rc=play&amp;pid=0c1cdb8b4ee0&amp;view=iframe" allowfullscreen></iframe>
+    <br>
+    <button class="complete-btn" onclick="showFinalMessage();">I’ve completed the puzzle</button>
+  </div>
+
+  <div class="congrats-section" id="congratsSection">
+    <img src="https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/canadaGoose.png" alt="Completed Puzzle">
+    <h2>🎉 Congratulations! You’ve uncovered the clue for the Canada Goose. Time to find the next one!</h2>
   </div>
 
   <audio id="gooseSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
 
   <script>
     function playGooseCall() {
-      const audio = document.getElementById('gooseSound');
-      audio.play();
+      document.getElementById('gooseSound').play();
+    }
+    function revealPuzzle() {
+      document.getElementById('hero').classList.add('hidden');
+      document.getElementById('content').classList.add('hidden');
+      document.getElementById('puzzleBox').style.display = 'block';
+    }
+
+    function showFinalMessage() {
+      document.getElementById('puzzleBox').classList.add('hidden');
+      document.getElementById('congratsSection').style.display = 'block';
     }
   </script>
 </body>
