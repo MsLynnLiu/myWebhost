@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mallard Duck Quiz</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: url('https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/mallard_background.png') repeat;
+      background-size: contain;
+    }
+    .quiz-container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .question { font-size: 1.2em; margin-bottom: 20px; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .options button, #nextBtn, #retryBtn {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: none;
+      background: #000;
+      color: #fff;
+      cursor: pointer;
+    }
+    .feedback { margin-top: 20px; font-weight: bold; color: red; }
+    .explanation { margin-top: 15px; color: #333; background: #eef; padding: 10px; border-radius: 8px; display: none; }
+    .hidden { display: none; }
+    video { width: 100%; margin-top: 20px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div id="quiz"></div>
+    <div id="feedback" class="feedback hidden"></div>
+    <div id="explanation" class="explanation"></div>
+    <video id="video" class="hidden" controls></video>
+    <button id="nextBtn" class="hidden">Next Question</button>
+    <button id="retryBtn" class="hidden">Try Again</button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "How long does it take for a mallard duck egg to hatch?",
+        options: ["7 days", "14 days", "21 days", "27 to 28 days"],
+        answer: 3,
+        video: "https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/stage1.mp4",
+        explanation: "Mother mallards are patient and dedicated. They incubate their eggs daily, keeping them warm. After about 27 to 28 days, the ducklings begin to peck through their shells. Most eggs in a clutch hatch around the same time, and the ducklings follow their mom on their first journey."
+      },
+      {
+        question: "When do mallard ducklings leave the nest to live independently?",
+        options: ["10-20 days", "30-40 days", "50-60 days", "70-80 days"],
+        answer: 2,
+        video: "https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/stage2.mp4",
+        explanation: "Though they can walk and swim within hours of hatching, mallard ducklings stay with their mother for 50 to 60 days. Only after they grow flight feathers and learn survival skills do they truly 'graduate' from the nest and start life on their own."
+      },
+      {
+        question: "How soon after hatching do mallard ducklings start walking?",
+        options: ["Within 1 hour", "After 1 day", "After one week", "After feathers grow fully"],
+        answer: 0,
+        video: "https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/stage3.mp4",
+        explanation: "Mallard ducklings are 'precocial' birds — they hatch with open eyes and downy feathers and can usually stand and follow their mother within a few hours. This natural instinct helps them survive by quickly learning to forage and avoid danger."
+      },
+      {
+        question: "What is the most distinctive feature of a male mallard duck?",
+        options: ["Brown feathers with uniform color all over", "Bright green head, yellow bill, and a white ring around the neck ", "Smaller body than the female, no curled tail feathers", "Gray feathers and orange feet"],
+        answer: 1,
+        video: "https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/stage4.mp4",
+        explanation: "The head of a male mallard duck is strikingly bright green, with a vivid yellow bill and a noticeable white ring around its neck, making it easy to identify. In contrast, the female's feathers are a subdued brown, helping her blend in while nesting to protect her ducklings."
+      },
+      {
+        question: "According to the IUCN, what is the current conservation status of the mallard duck?",
+        options: ["Critically Endangered", "Endangered", "Near Threatened", "Least Concern"],
+        answer: 3,
+        video: "https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/stage5.mp4",
+        explanation: "Mallards are widespread and highly adaptable waterfowl. Because of their stable global population, they are classified as 'Least Concern' by the International Union for Conservation of Nature (IUCN). However, their habitats still need protection, especially in urban and wetland areas."
+      }
+    ];
+
+    let current = 0;
+    const quiz = document.getElementById("quiz");
+    const feedback = document.getElementById("feedback");
+    const explanation = document.getElementById("explanation");
+    const video = document.getElementById("video");
+    const nextBtn = document.getElementById("nextBtn");
+    const retryBtn = document.getElementById("retryBtn");
+
+    function renderQuestion() {
+      feedback.classList.add("hidden");
+      video.classList.add("hidden");
+      explanation.style.display = "none";
+      nextBtn.classList.add("hidden");
+      retryBtn.classList.add("hidden");
+
+      const q = questions[current];
+      quiz.innerHTML = `<div class="question">${q.question}</div>` +
+        '<div class="options">' +
+        q.options.map((opt, i) => `<button onclick="checkAnswer(${i})">${opt}</button>`).join('') +
+        '</div>';
+    }
+
+    function checkAnswer(index) {
+      const q = questions[current];
+      const correct = q.answer;
+      if (index === correct) {
+        feedback.classList.add("hidden");
+        video.src = q.video;
+        video.classList.remove("hidden");
+        explanation.textContent = q.explanation;
+        explanation.style.display = "block";
+        video.onended = () => {
+          if (current === questions.length - 1) {
+            nextBtn.textContent = "Finish";
+          } else {
+            nextBtn.textContent = "Next Question";
+          }
+          nextBtn.classList.remove("hidden");
+        };
+      } else {
+        feedback.textContent = "Incorrect choice. Please think carefully and try again.";
+        feedback.classList.remove("hidden");
+        retryBtn.classList.remove("hidden");
+      }
+    }
+
+    nextBtn.onclick = () => {
+      current++;
+      if (current < questions.length) {
+        renderQuestion();
+      } else {
+        quiz.innerHTML = "<div class='question'>🎉 Congratulations! You've completed all the mallard duck quiz questions!</div>";
+        video.classList.add("hidden");
+        nextBtn.classList.add("hidden");
+        explanation.style.display = "none";
+      }
+    };
+
+    retryBtn.onclick = () => renderQuestion();
+
+    renderQuestion();
+  </script>
+</body>
+</html>
