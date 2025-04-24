@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>黑头鸥吃吃乐</title>
+  <title>Black-headed Gull Snack Game</title>
   <style>
     body {
       margin: 0;
@@ -17,14 +17,15 @@
       height: 100vh;
       background: #b3e0ff;
     }
-    #startButton, #score, #gameOverText {
+    button, #score, #gameOverText {
       position: absolute;
       z-index: 10;
       font-size: 1.5rem;
       padding: 10px 20px;
-      background: white;
+      background: black;
+      color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
     }
     #startButton {
       top: 50%;
@@ -35,21 +36,32 @@
       top: 10px;
       right: 10px;
       font-size: 1.2rem;
-      background: rgba(255, 255, 255, 0.8);
     }
     #gameOverText {
-      top: 40%;
+      top: 35%;
       left: 50%;
       transform: translateX(-50%);
       display: none;
+      background: rgba(0, 0, 0, 0.8);
+    }
+    #findMoreBtn {
+      display: none;
+      top: 48%;
+      left: 50%;
+      transform: translateX(-50%);
     }
   </style>
 </head>
 <body>
   <canvas id="gameCanvas"></canvas>
-  <button id="startButton">开始游戏</button>
-  <div id="score">分数: 0</div>
-  <div id="gameOverText">游戏结束！</div>
+  <button id="startButton">Start Game</button>
+  <div id="score">Score: 0</div>
+  <div id="gameOverText">Game Over!</div>
+  <button id="findMoreBtn" onclick="window.open('https://example.com', '_blank')">Find More</button>
+
+  <audio id="bgMusic" loop>
+    <source src="https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/Black-headed Gull_Game_bgmusic.mp3" type="audio/mp3">
+  </audio>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -57,6 +69,8 @@
     const startBtn = document.getElementById('startButton');
     const scoreText = document.getElementById('score');
     const gameOverText = document.getElementById('gameOverText');
+    const findMoreBtn = document.getElementById('findMoreBtn');
+    const bgMusic = document.getElementById('bgMusic');
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -69,7 +83,7 @@
       cookie: {src: 'https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/cookie.png', score: 1, weight: 4},
     };
 
-    const foodTypes = Object.entries(assets).slice(1); // remove gull
+    const foodTypes = Object.entries(assets).slice(1); // skip gull
 
     let gull = {x: canvas.width/2 - 40, y: canvas.height - 200, width: 80, height: 80};
     let foods = [];
@@ -98,7 +112,7 @@
         pool.push(...Array(data.weight).fill(name));
       });
       const type = pool[Math.floor(Math.random() * pool.length)];
-      const food = {
+      return {
         type,
         x: Math.random() * (canvas.width - 60),
         y: canvas.height,
@@ -106,7 +120,6 @@
         height: 60,
         speed: 2
       };
-      return food;
     }
 
     function drawGull() {
@@ -133,7 +146,7 @@
           gull.y + gull.height > f.y
         ) {
           score += assets[f.type].score;
-          scoreText.innerText = `分数: ${score}`;
+          scoreText.innerText = `Score: ${score}`;
           foods.splice(i, 1);
         }
       });
@@ -143,7 +156,7 @@
       if (targetX !== null) {
         const dx = targetX - gull.x;
         if (Math.abs(dx) > 1) {
-          gull.x += dx * 0.1; // 平滑跟随
+          gull.x += dx * 0.1;
           gull.x = Math.max(0, Math.min(gull.x, canvas.width - gull.width));
         }
       }
@@ -152,10 +165,7 @@
     function gameLoop() {
       if (!gameRunning) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (Math.random() < 0.03) {
-        foods.push(getRandomFood());
-      }
-
+      if (Math.random() < 0.03) foods.push(getRandomFood());
       moveGullTowardTarget();
       updateFoods();
       checkCollision();
@@ -165,6 +175,8 @@
       if (score >= 50) {
         gameRunning = false;
         gameOverText.style.display = 'block';
+        findMoreBtn.style.display = 'block';
+        bgMusic.pause();
         return;
       }
 
@@ -175,10 +187,13 @@
       gull.x = canvas.width/2 - gull.width/2;
       foods = [];
       score = 0;
-      scoreText.innerText = '分数: 0';
+      scoreText.innerText = 'Score: 0';
       gameOverText.style.display = 'none';
+      findMoreBtn.style.display = 'none';
       targetX = null;
       gameRunning = true;
+      bgMusic.currentTime = 0;
+      bgMusic.play();
       gameLoop();
     }
 
@@ -193,7 +208,7 @@
 
     loadImages(() => {
       ctx.fillStyle = '#333';
-      ctx.fillText('图片加载完成，点击开始按钮进入游戏！', 20, 30);
+      ctx.fillText('Images loaded. Tap Start Game to play!', 20, 30);
     });
   </script>
 </body>
