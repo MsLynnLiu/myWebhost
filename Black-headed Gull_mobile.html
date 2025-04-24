@@ -17,7 +17,7 @@
       height: 100vh;
       background: #b3e0ff;
     }
-    button, #score, #gameOverText {
+    button, #score {
       position: absolute;
       z-index: 10;
       font-size: 1.5rem;
@@ -38,17 +38,40 @@
       font-size: 1.2rem;
     }
     #gameOverText {
+      position: absolute;
       top: 35%;
       left: 50%;
       transform: translateX(-50%);
+      background: white;
+      color: black;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 1.5rem;
+      z-index: 10;
       display: none;
-      background: rgba(0, 0, 0, 0.8);
     }
     #findMoreBtn {
       display: none;
       top: 48%;
       left: 50%;
       transform: translateX(-50%);
+    }
+    #finalMessage {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: white;
+      color: black;
+      font-size: 1.6rem;
+      font-family: sans-serif;
+      padding: 2rem;
+      box-sizing: border-box;
+      z-index: 100;
+      text-align: center;
+      line-height: 2.4rem;
     }
   </style>
 </head>
@@ -57,7 +80,11 @@
   <button id="startButton">Start Game</button>
   <div id="score">Score: 0</div>
   <div id="gameOverText">Game Over!</div>
-  <button id="findMoreBtn" onclick="window.open('https://example.com', '_blank')">Find More</button>
+  <button id="findMoreBtn">Find More</button>
+  <div id="finalMessage">
+    <p><strong>🎉 Congratulations! You’ve found the clue of the Black-headed Gull!</strong></p>
+    <p>Now that you've collected all the clues,<br>please take time to investigate them!</p>
+  </div>
 
   <audio id="bgMusic" loop>
     <source src="https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/Black-headed Gull_Game_bgmusic.mp3" type="audio/mp3">
@@ -70,6 +97,7 @@
     const scoreText = document.getElementById('score');
     const gameOverText = document.getElementById('gameOverText');
     const findMoreBtn = document.getElementById('findMoreBtn');
+    const finalMessage = document.getElementById('finalMessage');
     const bgMusic = document.getElementById('bgMusic');
 
     canvas.width = window.innerWidth;
@@ -83,7 +111,7 @@
       cookie: {src: 'https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/cookie.png', score: 1, weight: 4},
     };
 
-    const foodTypes = Object.entries(assets).slice(1); // skip gull
+    const foodTypes = Object.entries(assets).slice(1);
 
     let gull = {x: canvas.width/2 - 40, y: canvas.height - 200, width: 80, height: 80};
     let foods = [];
@@ -190,6 +218,7 @@
       scoreText.innerText = 'Score: 0';
       gameOverText.style.display = 'none';
       findMoreBtn.style.display = 'none';
+      finalMessage.style.display = 'none';
       targetX = null;
       gameRunning = true;
       bgMusic.currentTime = 0;
@@ -204,6 +233,11 @@
     startBtn.addEventListener('click', () => {
       startBtn.style.display = 'none';
       startGame();
+    });
+
+    findMoreBtn.addEventListener('click', () => {
+      gameOverText.style.display = 'none';
+      finalMessage.style.display = 'block';
     });
 
     loadImages(() => {
