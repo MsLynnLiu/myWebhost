@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Canada Goose Discovered</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Canada Goose Discovered</title>
+<style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Open+Sans&display=swap');
 
     html, body {
@@ -19,6 +20,7 @@
     }
 
     .hero, .content {
+      margin-top: 20px !important;
       transition: opacity 0.5s ease;
     }
 
@@ -45,6 +47,7 @@
     }
 
     .content {
+      margin-top: 20px !important;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -152,36 +155,55 @@
   </style>
 </head>
 <body>
-  <div class="hero" id="hero">
-    <h1>Congratulations! You’ve Spotted a Canada Goose</h1>
-    <p>Now complete the puzzle to unlock your clue!</p>
-  </div>
+<div class="hero" id="hero">
+<h1>Congratulations! You’ve Spotted a Canada Goose</h1>
+<p>Now complete the puzzle to unlock your clue!</p>
+</div>
+<div class="content" id="content">
+<div class="text-box">
+<h2>Track the Trail</h2>
 
-  <div class="content" id="content">
-    <div class="text-box">
-      <h2>Track the Trail</h2>
-      <p>
-        This is just the beginning. Every piece you solve brings you closer to discovering the full story.
-        Can you piece together the clues and follow where the geese have flown?
+<p>
+<strong>You are a Guardian of Birds.</strong><br/>
+      Last night, a strange dream visited you — a whisper from the wild.<br/>
+      A voice, deep and ancient, called upon you to gather the scattered fragments of four special birds in this very place.<br/>
+      Each one holds a memory, a spirit, a story of nature’s resilience.<br/>
+      Once all are found, you’ll unlock the Guardian’s Emblem — a mark of your dedication to their protection.
+    </p>
+<p>
+      Now, you’ve discovered your <strong>first fragment</strong> — the Canada Goose.
+    </p>
+<h3 style="font-family: 'Playfair Display', serif;">🦢 About the Canada Goose</h3>
+<p>
+      Majestic and determined, the Canada Goose is a symbol of loyalty and strength.<br/>
+      They are known for their striking black heads and long necks, their V-shaped formations in the sky, and their unwavering bond with their flock.<br/>
+      These geese are seasonal travellers, returning year after year to familiar nesting grounds.<br/>
+      Their calls echo across the skies — not just as a sound, but as a reminder of unity, purpose, and home.
+    </p>
+
+<button onclick="revealPuzzle(); playGooseCall();">Start the Puzzle</button>
+</div>
+</div>
+<div class="iframe-wrapper" id="puzzleBox">
+<iframe allowfullscreen="" id="puzzleFrame" src="https://www.jigsawplanet.com/?rc=play&amp;pid=0c1cdb8b4ee0&amp;view=iframe"></iframe>
+<br/>
+<button class="complete-btn" onclick="showFinalMessage();">I’ve completed the puzzle</button>
+</div>
+<div class="congrats-section" id="congratsSection">
+<img alt="Completed Puzzle" src="https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/canadaGoose.png" style="width: 60%; max-width: 300px; height: auto; display: block; margin: 0 auto 20px;"/>
+<h2>🎉 Congratulations! You’ve uncovered the clue for the Canada Goose. Time to find the next one!</h2>
+<div style="margin-top: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 10px; text-align: left; max-width: 700px; margin-left: auto; margin-right: auto;">
+<h3 style="font-family: 'Playfair Display', serif; font-size: 20px; color: #000;">🦆 Next Clue — Mallard Duck</h3>
+<p style="font-size: 16px; line-height: 1.6; color: #333;">
+        “You've met me — loyal, strong, and always flying with friends.<br/>
+        But now it’s time to meet someone who loves the water even more than I do.<br/>
+        Find a place to sit, a long wooden bench, and you’ll discover her world.”
       </p>
-      <button onclick="revealPuzzle(); playGooseCall();">Start the Puzzle</button>
-    </div>
-  </div>
-
-  <div class="iframe-wrapper" id="puzzleBox">
-    <iframe id="puzzleFrame" src="https://www.jigsawplanet.com/?rc=play&amp;pid=0c1cdb8b4ee0&amp;view=iframe" allowfullscreen></iframe>
-    <br>
-    <button class="complete-btn" onclick="showFinalMessage();">I’ve completed the puzzle</button>
-  </div>
-
-  <div class="congrats-section" id="congratsSection">
-    <img src="https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/canadaGoose.png" alt="Completed Puzzle">
-    <h2>🎉 Congratulations! You’ve uncovered the clue for the Canada Goose. Time to find the next one!</h2>
-  </div>
-
-  <audio id="gooseSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
-
-  <script>
+<p style="font-weight: bold; color: #444; font-size: 15px;">➡️ Head to the <strong>bench</strong> to find the Mallard Duck Artcode.</p>
+</div>
+</div>
+<audio id="gooseSound" preload="auto" src="https://www.fesliyanstudios.com/play-mp3/387"></audio>
+<script>
     function playGooseCall() {
       document.getElementById('gooseSound').play();
     }
