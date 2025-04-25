@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mallard Duck Quiz</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mallard Duck Quiz</title>
+<style>
     body {
       font-family: sans-serif;
       margin: 0;
@@ -38,16 +39,30 @@
   </style>
 </head>
 <body>
-  <div class="quiz-container">
-    <div id="quiz"></div>
-    <div id="feedback" class="feedback hidden"></div>
-    <div id="explanation" class="explanation"></div>
-    <video id="video" class="hidden" controls></video>
-    <button id="nextBtn" class="hidden">Next Question</button>
-    <button id="retryBtn" class="hidden">Try Again</button>
-  </div>
-
-  <script>
+<div id="mallardIntro" style="max-width: 600px; margin: 40px auto 20px auto; background: #ffffffcc; padding: 24px; border-radius: 12px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+<h2 style="font-family: 'Playfair Display', serif; font-size: 24px;">🦆 You've found the second fragment — the Mallard Duck!</h2>
+<p style="font-size: 16px; line-height: 1.6;">Get ready to dive into the world of the mallard. Tap the button below to begin the quiz and uncover their secrets.</p>
+<button onclick="startQuiz()" style="background: #000; color: white; padding: 12px 20px; border-radius: 10px; font-size: 16px; margin-top: 15px;">Start Quiz</button>
+</div>
+<div class="quiz-container" style="display: none;">
+<div id="quiz"></div><div class="hidden" id="mallardResultBlock" style="margin: 40px auto; padding: 30px; background-color: #ffffffcc; border-radius: 20px; max-width: 700px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: left;">
+<h2 style="font-family: 'Playfair Display', serif; font-size: 22px; text-align: center;">🎉 Congratulations! You've completed all the mallard duck quiz questions!</h2>
+<h3 style="font-family: 'Playfair Display', serif; font-size: 20px; color: #000; margin-top: 30px;">🪶 Next Clue — Egyptian Goose</h3>
+<p style="font-size: 16px; line-height: 1.6; color: #333;">
+    “Quack! You’ve found me!<br/>
+    I’m not fussy — I’ll snack on almost anything, and I love staying near the water.<br/>
+    But there's someone nearby who’s travelled from far away —<br/>
+    Look for a place where people gather for picnics and stories.”
+  </p>
+<p style="font-weight: bold; color: #444; font-size: 15px;">➡️ Head to the <strong>picnic table</strong> to find the Egyptian Goose Artcode.</p>
+</div>
+<div class="feedback hidden" id="feedback"></div>
+<div class="explanation" id="explanation"></div>
+<video class="hidden" controls="" id="video"></video>
+<button class="hidden" id="nextBtn">Next Question</button>
+<button class="hidden" id="retryBtn">Try Again</button>
+</div>
+<script>
     const questions = [
       {
         question: "How long does it take for a mallard duck egg to hatch?",
@@ -137,7 +152,7 @@
       if (current < questions.length) {
         renderQuestion();
       } else {
-        quiz.innerHTML = "<div class='question'>🎉 Congratulations! You've completed all the mallard duck quiz questions!</div>";
+        quiz.innerHTML = ""; document.getElementById("mallardResultBlock").classList.remove("hidden");
         video.classList.add("hidden");
         nextBtn.classList.add("hidden");
         explanation.style.display = "none";
@@ -147,6 +162,14 @@
     retryBtn.onclick = () => renderQuestion();
 
     renderQuestion();
-  </script>
+  
+function startQuiz() {
+  document.getElementById("mallardIntro").style.display = "none";
+  document.querySelector(".quiz-container").style.display = "block";
+}
+function showClue() {
+  document.getElementById("mallardClue").classList.remove("hidden");
+}
+</script>
 </body>
 </html>
