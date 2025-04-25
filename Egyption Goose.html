@@ -1,11 +1,13 @@
+
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Meet the Egyptian Goose</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-  <style>
+<meta charset="utf-8"/>
+<title>Meet the Egyptian Goose</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" rel="stylesheet"/>
+<style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -82,39 +84,45 @@
   </style>
 </head>
 <body>
-
 <div class="content-wrapper">
-  <h1>Welcome to the Egyptian Goose Explorer</h1>
-  <p>Click below to watch an introduction video, then explore the goose's migration journey!</p>
-
-  <div id="startButtonContainer">
-    <button onclick="startVideo()">▶ Watch Video</button>
-  </div>
-
-  <div id="videoContainer" style="display:none">
-    <video id="gooseVideo" controls>
-      <source src="https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/introduction_Egyption Goose.mp4" type="video/mp4">
+<h1>Welcome to the Egyptian Goose Explorer</h1><p>🪿 Congratulations! You've found the third fragment — the Egyptian Goose.</p>
+<p>Click below to watch an introduction video, then explore the goose's migration journey!</p>
+<div id="startButtonContainer">
+<button onclick="startVideo()">▶ Watch Video</button>
+</div>
+<div id="videoContainer" style="display:none">
+<video controls="" id="gooseVideo">
+<source src="https://raw.githubusercontent.com/MsLynnLiu/my-image-host/main/introduction_Egyption Goose.mp4" type="video/mp4"/>
       Your browser does not support the video tag.
     </video>
-  </div>
-
-  <div id="intro" style="display:none">
-    <p>Thanks for watching! Click below to explore the Egyptian Goose's migration path.</p>
-    <button onclick="startMap()">🧭 Explore Migration</button>
-  </div>
-
-  <div id="mapContainer" style="display:none">
-    <h2>Egyptian Goose Migration Map</h2>
-    <p id="instructionText">Use the slider below to explore different migration locations.</p>
-    <div id="map"></div>
-    <div class="slider-container">
-      <label for="timeRange">Migration Location:</label><br>
-      <input type="range" id="timeRange" min="0" max="19" step="1" value="0">
-      <span id="timeLabel">Location-1</span>
-    </div>
-  </div>
+</div>
+<div id="intro" style="display:none">
+<p>Thanks for watching! Click below to explore the Egyptian Goose's migration path.</p>
+<button onclick="startMap()">🧭 Explore Migration</button>
+</div>
+<div id="mapContainer" style="display:none">
+<h2>Egyptian Goose Migration Map</h2>
+<p id="instructionText">Use the slider below to explore different migration locations.</p>
+<div id="map"></div>
+<div class="slider-container">
+<label for="timeRange">Migration Location:</label><br/>
+<input id="timeRange" max="19" min="0" step="1" type="range" value="0"/>
+<span id="timeLabel">Location-1</span>
 </div>
 
+<div class="" id="gooseClue" style="margin-top: 30px; padding: 20px; background-color: #ffffffdd; border-radius: 10px; text-align: left; max-width: 700px; margin-left: auto; margin-right: auto;">
+<h3 style="font-family: 'Playfair Display', serif; font-size: 20px; color: #000;">📍 Next Clue — Black-headed Gull</h3>
+<p style="font-size: 16px; line-height: 1.6; color: #333;">
+        “Impressive, isn’t it?<br/>
+        I come from afar, but this place has become my home.<br/>
+        Now, let me introduce you to a noisy neighbour —<br/>
+        She’s loud, she laughs, and she loves the open space near the water’s edge.<br/>
+        Look for the metal railing by the bridge.”
+      </p>
+<p style="font-weight: bold; color: #444; font-size: 15px;">➡️ Head to the <strong>bridge railing</strong> to find the Black-headed Gull Artcode.</p>
+</div>
+</div>
+</div>
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script>
 function startVideo() {
@@ -203,6 +211,5 @@ function initMap() {
   updateMap(0);
 }
 </script>
-
 </body>
 </html>
